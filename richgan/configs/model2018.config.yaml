@@ -1,0 +1,25 @@
+# Note: the scheduler step numbers assume 1M events in the training set
+
+create_data_manager:
+  particle: pion
+create_gan:
+  name: Model2018Pion
+  step_scheduler_config:
+    classname: KStepScheduler
+    k: 15
+  updater_config:
+    classname: CramerUpdater
+    gen_lr_scheduler:
+      classname: ExponentialDecayScheduler
+      decay_steps: 160
+    disc_lr_scheduler:
+      classname: ExponentialDecayScheduler
+      decay_steps: 160
+    gp_lambda_scheduler:
+      classname: ArctanSaturatingScheduler
+      halfrise_steps: 8000
+create_summary_makers:
+- period_in_epochs: 500
+create_training_manager:
+  epochs: 800000
+  save_interval_in_epochs: 2000

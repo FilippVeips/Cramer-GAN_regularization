@@ -1,0 +1,60 @@
+create_data_manager:
+  extra_sample_config:
+    particle: MC_pion_from_Lc
+    aux_features:
+    - BremPIDe
+    - CaloPrsE
+    - EcalPIDe
+    - EcalPIDmu
+    - HcalPIDe
+    - HcalPIDmu
+    - InAccBrem
+    - InAccEcal
+    - InAccHcal
+    - InAccMuon
+    - InAccPrs
+    - MuonBkgLL
+    - MuonIsLooseMuon
+    - MuonIsMuon
+    - MuonMuLL
+    - MuonNShared
+    - PrsPIDe
+    - RichAboveKaThres
+    - RichAboveMuThres
+    - RichAbovePiThres
+    - RichAbovePrThres
+    - RichDLLbt
+    - RichDLLd
+    - RichDLLe
+    - RichDLLk
+    - RichDLLmu
+    - RichDLLp
+    - RichUsedR1Gas
+    - RichUsedR2Gas
+    - TrackChi2PerDof
+    - TrackFitMatchChi2
+    - TrackFitTChi2
+    - TrackFitTNDoF
+    - TrackFitVeloChi2
+    - TrackFitVeloNDoF
+    - TrackGhostProbability
+    - TrackNumDof
+    - TrackP
+    - TrackPt
+create_summary_makers:
+- period_in_epochs: 100
+  split: extra
+  aux_features_in_selection: true
+  selection_augmentation:
+  - classname: ProbNNAugmentation
+    config_path: "richgan/ext/probnn/TMVA_weights/GlobalPID_Pion_Long_TMVA.weights.xml"
+    particle_name: Pion
+    target_feature_name: probnn_Pion
+    feature_mapping:
+      gen_RichDLLbt: RichDLLbt
+      gen_RichDLLe: RichDLLe
+      gen_RichDLLk: RichDLLk
+      gen_RichDLLmu: RichDLLmu
+      gen_RichDLLp: RichDLLp
+  selection: "probnn_Pion > 0.1"
+tag: eval_Lc

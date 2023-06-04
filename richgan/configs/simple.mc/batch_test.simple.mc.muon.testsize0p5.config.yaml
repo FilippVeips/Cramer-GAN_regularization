@@ -1,0 +1,32 @@
+create_data_manager:
+  data_path: "/mnt/smohnenko/mix_data/mix_dataset/"
+  particle: muon
+  test_size: 0.5
+  feature_columns:
+  - Brunel_P
+  - Brunel_ETA
+  - nSPDhits
+  preprocessor_config:
+    classname: WeightBypassPreprocessor
+    weight_col_name: probe_sWeight
+    preprocessor_config:
+      classname: QuantileTransformer
+      n_quantiles: 50000
+      output_distribution: normal
+      subsample: 10000000000
+  preselection: "(RichDLLe > -800) & (RichDLLmu > -800) & (RichDLLk > -800) & (RichDLLp > -800) & (RichDLLbt > -800)"
+create_gan:
+  name: batch_test_SimpleModelMuonMC_testsize0p5
+  updater_config:
+    classname: CramerUpdater
+create_summary_makers:
+- period_in_epochs: 100
+  split: val
+  plot_maker_configs:
+    - classname: Hist1DMaker
+    - classname: EfficiencyMaker
+      per_bin_thresholds: True
+create_training_manager:
+  epochs: 100
+  save_interval_in_epochs: 100
+  batch_size: 17000

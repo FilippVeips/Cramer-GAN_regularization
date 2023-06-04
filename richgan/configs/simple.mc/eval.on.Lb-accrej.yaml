@@ -1,0 +1,14 @@
+create_data_manager:
+  extra_sample_config:
+    particle: MC_pion_from_Lb
+create_summary_makers:
+- period_in_epochs: 100
+  split: extra
+  accept_reject_gen_config:
+    cuts:
+      RichDLLk:
+        upper: -5.
+      RichDLLp:
+        upper: -2.
+    max_iterations: 1000
+tag: eval_Lb_accept_reject

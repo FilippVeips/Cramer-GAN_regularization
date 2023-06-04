@@ -1,0 +1,162 @@
+ArctanSaturatingScheduler:
+  force_value_at_start: true
+  halfrise_steps: 500
+  magnitude: 20.0
+  minimal_value: 0.02
+CramerUpdater:
+  disc_lr: 0.001
+  disc_lr_scheduler: &id001
+    classname: ExponentialDecayScheduler
+  disc_optimizer: RMSprop
+  gen_lr: 0.001
+  gen_lr_scheduler: &id002
+    classname: ExponentialDecayScheduler
+  gen_optimizer: RMSprop
+  gp_lambda: 0.0
+  gp_lambda_scheduler:
+    classname: ArctanSaturatingScheduler
+DataManager:
+  csv_delimiter: "\t"
+  data_path: /home/amaevskiy/temporary/data_calibsample/
+  data_shuffle_split_random_seed: 123
+  extra_sample_config: null
+  feature_columns:
+  - Brunel_P
+  - Brunel_ETA
+  - nTracks_Brunel
+  preprocessor: null
+  preprocessor_config:
+    classname: WeightBypassPreprocessor
+    preprocessor_config:
+      classname: QuantileTransformer
+      n_quantiles: 100000
+      output_distribution: normal
+      subsample: 10000000000
+    weight_col_name: probe_sWeight
+  preselection: null
+  target_columns:
+  - RichDLLe
+  - RichDLLk
+  - RichDLLmu
+  - RichDLLp
+  - RichDLLbt
+  test_size: 0.5
+  weight_column: probe_sWeight
+EfficiencyMaker:
+  bins: 10
+  bins_2d: null
+  errorbar_common_args:
+    fmt: o
+    marker: o
+    markeredgewidth: 2
+    ms: 4
+  errorbar_fake_args: {}
+  errorbar_real_args: {}
+  figure_args:
+    figsize: &id003 !!python/tuple
+    - 8
+    - 8
+  make_ratio: true
+  name_prefix: eff_ratio
+  per_bin_thresholds: false
+  period_in_epochs: null
+  thresholds:
+  - 0.05
+  - 0.1
+  - 0.25
+  - 0.5
+  - 0.75
+  - 0.9
+  - 0.95
+ExponentialDecayScheduler:
+  decay_rate: 0.98
+  decay_steps: 10
+GANModel:
+  discriminator_config:
+    classname: SimpleDiscriminator
+  generator_config:
+    classname: SimpleGenerator
+  step_scheduler_config:
+    classname: KStepScheduler
+  updater_config:
+    classname: CramerUpdater
+GANUpdaterBase:
+  disc_lr: 0.001
+  disc_lr_scheduler: *id001
+  disc_optimizer: RMSprop
+  gen_lr: 0.001
+  gen_lr_scheduler: *id002
+  gen_optimizer: RMSprop
+Hist1DMaker:
+  bins: 100
+  figure_args:
+    figsize: *id003
+  hist_common_args:
+    density: true
+  hist_fake_args:
+    alpha: 0.7
+    label: GAN
+  hist_real_args:
+    label: 'detailed
+
+      simulation'
+  logy: false
+  name_prefix: hist1d
+  period_in_epochs: null
+KStepScheduler:
+  k: 5
+ProbNNAugmentation:
+  feature_mapping: null
+SimpleDiscriminator:
+  activation: relu
+  arch_name: SimpleDiscriminator
+  depth: 10
+  input_size_cond: 3
+  input_size_main: 5
+  output_size: 256
+  width: 128
+SimpleGenerator:
+  activation: relu
+  arch_name: SimpleGenerator
+  depth: 10
+  distribution: normal
+  input_size: 3
+  n_latent_dims: 64
+  output_size: 5
+  width: 128
+SummaryMetricsMaker:
+  accept_reject_gen_config: null
+  aux_features_in_selection: false
+  figures_log_path: null
+  period_in_epochs: 100
+  plot_maker_configs:
+  - classname: Hist1DMaker
+  - classname: EfficiencyMaker
+  postprocess: true
+  scalar_maker_configs:
+  - classname: WeightedKSMaker
+  selection: null
+  selection_augmentation: []
+  split: val
+TrainingManager:
+  batch_size: 50000
+  epochs: 5000
+  log_path: logs
+  save_base_path: saved_models
+  save_interval_in_epochs: 100
+WGANUpdater:
+  disc_lr: 0.001
+  disc_lr_scheduler: *id001
+  disc_optimizer: RMSprop
+  gen_lr: 0.001
+  gen_lr_scheduler: *id002
+  gen_optimizer: RMSprop
+  gp_lambda: 0.0
+  gp_lambda_scheduler:
+    classname: ArctanSaturatingScheduler
+WeightBypassPreprocessor:
+  preprocessor: null
+  preprocessor_config: null
+WeightedKSMaker:
+  bins: 20
+  period_in_epochs: null

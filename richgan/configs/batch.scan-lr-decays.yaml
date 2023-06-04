@@ -1,0 +1,8 @@
+create_gan:
+  updater_config:
+    gen_lr_scheduler:
+      classname: ExponentialDecayScheduler
+      decay_steps: !!python/object/apply:numpy.arange [5, 25]
+    disc_lr_scheduler:
+      classname: ExponentialDecayScheduler
+      decay_steps: !!python/object/apply:numpy.arange [5, 25]

@@ -1,0 +1,51 @@
+create_data_manager:
+  data_path: '.\dataset\train'
+  particle: muon
+  extra_sample_config:
+    particle: MC_mu_from_Bu_Kst
+    path: '.\dataset\test'
+    csv_delimiter: ','
+    feature_columns:
+    - P
+    - ETA
+    - NumSPDHits
+    target_columns:
+    - RichDLLe
+    - RichDLLk
+    - RichDLLmu
+    - RichDLLp
+    - RichDLLbt
+    weight_column: probe_sWeight
+  test_size: 0.3
+  feature_columns:
+  - Brunel_P
+  - Brunel_ETA
+  - nSPDhits
+  preprocessor_config:
+    classname: WeightBypassPreprocessor
+    weight_col_name: probe_sWeight
+    preprocessor_config:
+      classname: QuantileTransformer
+      n_quantiles: 50000
+      output_distribution: normal
+      subsample: 10000000000
+create_gan:
+  name: SimpleModelMuonMC
+create_summary_makers:
+- period_in_epochs: 100
+  estimator:
+    model: GAN
+    sample_count: all
+    bandwidth: 0.1
+  split: extra
+  selection: "(gen_RichDLLe > -800) & (gen_RichDLLmu > -800) & (gen_RichDLLk > -800) & (gen_RichDLLp > -800) & (gen_RichDLLbt > -800) & (RichDLLe > -800) & (RichDLLmu > -800) & (RichDLLk > -800) & (RichDLLp > -800) & (RichDLLbt > -800)"
+  plot_maker_configs:
+    - classname: Hist1DMaker
+      hist_fake_args:
+        label: GAN
+    - classname: EfficiencyMaker
+      per_bin_thresholds: True
+create_training_manager:
+  epochs: 5000
+  save_interval_in_epochs: 100
+  batch_size: 17000

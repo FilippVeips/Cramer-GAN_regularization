@@ -1,0 +1,53 @@
+create_data_manager:
+  data_shuffle_split_random_seed: 1034
+  data_path: 'C:\Users\Sergey\Sources\temp_dataset\mix_dataset\'
+  particle: muon
+  extra_sample_config:
+    particle: MC_mu_from_Bu_Kst
+    path: 'C:\Users\Sergey\Sources\temp_dataset\csv_outputs\'
+    csv_delimiter: ','
+    feature_columns:
+    - P
+    - ETA
+    - NumSPDHits
+    - P_T
+    target_columns:
+    - RichDLLe
+    - RichDLLk
+    - RichDLLmu
+    - RichDLLp
+    - RichDLLbt
+    weight_column: probe_sWeight
+  test_size: 0.3
+  feature_columns:
+  - Brunel_P
+  - Brunel_ETA
+  - nSPDhits
+  - P_T
+  preprocessor_config:
+    classname: WeightBypassPreprocessor
+    weight_col_name: probe_sWeight
+    preprocessor_config:
+      classname: RobustScaler
+create_gan:
+  name: SimpleModelMuonMC
+create_summary_makers:
+- period_in_epochs: 100
+  estimator:
+    model: KDE
+    sample_count: all
+    bandwidth: 0.0001
+    sample_bw_factor: 1
+    neighbors: 10
+  split: val
+  selection: "(gen_RichDLLe > -800) & (gen_RichDLLmu > -800) & (gen_RichDLLk > -800) & (gen_RichDLLp > -800) & (gen_RichDLLbt > -800) & (RichDLLe > -800) & (RichDLLmu > -800) & (RichDLLk > -800) & (RichDLLp > -800) & (RichDLLbt > -800)"
+  plot_maker_configs:
+    - classname: Hist1DMaker
+      hist_fake_args:
+        label: KDE
+    - classname: EfficiencyMaker
+      per_bin_thresholds: True
+create_training_manager:
+  epochs: 5000
+  save_interval_in_epochs: 100
+  batch_size: 17000

@@ -1,0 +1,4 @@
+create_data_manager:
+  extra_sample_config:
+    particle: MC_pion_from_Lb
+tag: eval_Lb_nocut

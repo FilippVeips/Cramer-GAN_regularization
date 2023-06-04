@@ -1,0 +1,12 @@
+create_data_manager:
+  extra_sample_config:
+    particle: MC_pion_from_Lb
+create_summary_makers:
+- period_in_epochs: 100
+  split: extra
+  selection: "(gen_RichDLLk < -5.) & (gen_RichDLLp < -2.)"
+  plot_maker_configs:
+    - classname: Hist1DMaker
+    - classname: EfficiencyMaker
+      bins_2d: 4
+tag: eval_Lb_2dbins
